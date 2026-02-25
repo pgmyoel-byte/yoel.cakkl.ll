@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>WARNING SYSTEM</title>
+
+<style>
+body{
+    margin:0;
+    background:black;
+    color:red;
+    font-family:monospace;
+    text-align:center;
+}
+
+#start{
+    margin-top:20%;
+    font-size:22px;
+    padding:15px 25px;
+    background:red;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+#warning{
+    display:none;
+    margin-top:15%;
+    animation:blink 0.7s infinite;
+}
+
+@keyframes blink{
+    0%{opacity:1;}
+    50%{opacity:0.2;}
+    100%{opacity:1;}
+}
+
+.big{
+    font-size:50px;
+    font-weight:bold;
+}
+
+#final{
+    display:none;
+    color:lime;
+    font-size:28px;
+    margin-top:20%;
+}
+</style>
+</head>
+
+<body>
+
+<button id="start">Klik untuk membuka sistem</button>
+
+<div id="warning">
+    <div class="big">⚠ WARNINGGGGGG ⚠</div>
+    <p>Terdeteksi Aktivitas Mencurigakan</p>
+    <p>Scanning Perangkat: <b>Charelllll</b></p>
+    <p>Analisis Data Sedang Berjalan...</p>
+</div>
+
+<div id="final">
+    😆 Selamat Anda kena prank Dari Yoel!
+</div>
+
+<script>
+// === FULLSCREEN ===
+function goFullscreen(){
+    if(document.documentElement.requestFullscreen){
+        document.documentElement.requestFullscreen();
+    }
+}
+
+// === ALARM SOUND (tanpa file) ===
+let ctx;
+function startAlarm(){
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function beep(){
+        let osc = ctx.createOscillator();
+        let gain = ctx.createGain();
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.frequency.value = 900;
+        osc.type = "square";
+
+        gain.gain.setValueAtTime(1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.5);
+    }
+
+    // bunyi berulang
+    window.alarmInterval = setInterval(beep, 600);
+}
+
+// === STOP ALARM ===
+function stopAlarm(){
+    clearInterval(window.alarmInterval);
+}
+
+// === START ===
+document.getElementById("start").onclick = function(){
+    goFullscreen();
+    startAlarm();
+
+    document.getElementById("start").style.display="none";
+    document.getElementById("warning").style.display="block";
+
+    // setelah beberapa detik → prank reveal
+    setTimeout(()=>{
+        stopAlarm();
+        document.getElementById("warning").style.display="none";
+        document.body.style.color="lime";
+        document.getElementById("final").style.display="block";
+    },6000);
+};
+</script>
+
+</body>
+</html>
